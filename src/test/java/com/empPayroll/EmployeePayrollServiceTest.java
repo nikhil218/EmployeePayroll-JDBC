@@ -14,9 +14,18 @@ public class EmployeePayrollServiceTest {
     }
 
     @Test
-    void givenNewSalaryShouldMatchUpdatedSalary() {
+    public void givenNewSalaryShouldMatchUpdatedSalary() {
         EmployeePayroll employeePayroll = new EmployeePayroll();
         List<EmployeePayrollData> employeePayrollData = employeePayroll.readData();
-        employeePayroll.updateEmployeeSalary("Terisa", 300000);
+        int result = employeePayroll.updateEmployeeSalary("bill", 500000);
+        Assertions.assertEquals(1, result);
+    }
+
+    @Test
+    public void givenNewSalaryShouldMatchUpdatedSalary_UsingPreparedStatement() {
+        EmployeePayroll employeePayroll = new EmployeePayroll();
+        List<EmployeePayrollData> employeePayrollData = employeePayroll.readData();
+        int result = employeePayroll.updateEmployeeSalaryPrepared("Terisa", 50000);
+        Assertions.assertEquals(1, result);
     }
 }
