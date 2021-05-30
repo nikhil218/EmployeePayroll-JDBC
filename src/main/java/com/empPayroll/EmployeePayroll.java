@@ -36,47 +36,43 @@ public class EmployeePayroll {
                 LocalDate date = resultSet.getDate("start").toLocalDate();
                 employeePayrollList.add(new EmployeePayrollData(id, name, salary, date));
             }
+            connection.close();
         } catch (SQLException e){
             e.printStackTrace();
         }
         return employeePayrollList;
     }
 
-    /*
-    public static void main(String[] args) {
-        String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?useSSL=false";
-        String userName = "root";
-        String password = "nikhil123";
+    public void printData() {
+        String sql = "SELECT * FROM employee_payroll; ";
+        try {
+            Connection connection = this.getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                double salary = resultSet.getDouble("salary");
+                LocalDate date = resultSet.getDate("start").toLocalDate();
+                System.out.println("\n");
+                System.out.println("Id : " + id);
+                System.out.println("Name : " + name);
+                System.out.println("Start Date : " + date);
+                System.out.println("Salary : " + salary);
+            }
+            connection.close();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
 
-        Connection connection;
-        try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            System.out.println("Driver Loaded");
-        }
-        catch(ClassNotFoundException e){
-            throw new IllegalStateException("Class not found", e);
-        }
-        listdrivers();
-        try{
-            System.out.println("Connecting to database : " + jdbcURL);
-            connection = DriverManager.getConnection(jdbcURL, userName, password);
-            System.out.println("Connection Successful : " + connection);
+    public void updateEmployeeSalary(String name, double salary) {
+        String sql = String.format("UPDATE employee_payroll set salary = %.2f where name = '%s';", salary, name);
+        try(Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
-
-     */
-    /*
-    public static void listdrivers(){
-        Enumeration<Driver> driverlist = DriverManager.getDrivers();
-        while(driverlist.hasMoreElements()){
-            Driver driverClass = (Driver) driverlist.nextElement();
-            System.out.println(" " + driverClass.getClass().getName());
-        }
-    }
-
-     */
-
-
 }

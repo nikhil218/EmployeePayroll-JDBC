@@ -12,4 +12,11 @@ public class EmployeePayrollServiceTest {
         List<EmployeePayrollData> employeePayrollData = employeePayroll.readData();
         Assertions.assertEquals(3, employeePayrollData.size());
     }
+
+    @Test
+    void givenNewSalaryShouldMatchUpdatedSalary() {
+        EmployeePayroll employeePayroll = new EmployeePayroll();
+        List<EmployeePayrollData> employeePayrollData = employeePayroll.readData();
+        employeePayroll.updateEmployeeSalary("Terisa", 300000);
+    }
 }
