@@ -101,11 +101,37 @@ public class EmployeePayroll {
                 LocalDate date = resultSet.getDate("start").toLocalDate();
                 employeePayrollDataList.add(new EmployeePayrollData(id, name, salary, date));
             }
-            this.printData(resultSet);
         }
         catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return employeePayrollDataList;
+    }
+
+    public  List<String> dataManipulation() {
+        List<String> list = new ArrayList<>();
+        String query = "select gender,sum(salary), avg(salary), min(salary), max(salary), count(salary) from employee_payroll GROUP BY gender;";
+        try {
+            Connection connection = this.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            ResultSet result = preparedStatement.executeQuery();
+            while(result.next()){
+                int index = 1;
+                System.out.println("Gender : " + result.getString(1));
+                System.out.println("Salary : " + result.getString(2));
+                for(int i = 0; i < 13; i++){
+                    if(index < 7){
+                        list.add(i, result.getString(index));
+                        index++;
+                    }
+                }
+                System.out.println(list);
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return list;
     }
 }

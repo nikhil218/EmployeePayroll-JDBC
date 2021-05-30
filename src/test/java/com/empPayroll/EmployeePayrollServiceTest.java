@@ -33,4 +33,11 @@ public class EmployeePayrollServiceTest {
         List<EmployeePayrollData> employeePayrollDataList = employeePayroll.retrieveEmployeeBetweenDateRange("2017-01-01", "2019-06-06");
         Assertions.assertEquals(2, employeePayrollDataList.size());
     }
+
+    @Test
+    public void get_sum_from_employeePayroll_table() {
+        EmployeePayroll employeePayroll = new EmployeePayroll();
+        List<String> list = employeePayroll.dataManipulation();
+        Assertions.assertEquals(12, list.size());
+    }
 }
