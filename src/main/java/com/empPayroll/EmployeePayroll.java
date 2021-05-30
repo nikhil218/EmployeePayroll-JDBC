@@ -3,7 +3,6 @@ package com.empPayroll;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 public class EmployeePayroll {
@@ -43,12 +42,8 @@ public class EmployeePayroll {
         return employeePayrollList;
     }
 
-    public void printData() {
-        String sql = "SELECT * FROM employee_payroll; ";
+    public void printData(ResultSet resultSet) {
         try {
-            Connection connection = this.getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()){
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
@@ -60,7 +55,6 @@ public class EmployeePayroll {
                 System.out.println("Start Date : " + date);
                 System.out.println("Salary : " + salary);
             }
-            connection.close();
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -90,5 +84,28 @@ public class EmployeePayroll {
             throwables.printStackTrace();
         }
         return 0;
+    }
+
+    public List<EmployeePayrollData> retrieveEmployeeBetweenDateRange(String startDate, String endDate) {
+        String sql = "SELECT * FROM employee_payroll WHERE start BETWEEN ? AND ? ";
+        List<EmployeePayrollData> employeePayrollDataList = new ArrayList<>();
+        try(Connection connection = this.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setDate(1, java.sql.Date.valueOf(startDate));
+            preparedStatement.setDate(2, java.sql.Date.valueOf(endDate));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                double salary = resultSet.getDouble("salary");
+                LocalDate date = resultSet.getDate("start").toLocalDate();
+                employeePayrollDataList.add(new EmployeePayrollData(id, name, salary, date));
+            }
+            this.printData(resultSet);
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return employeePayrollDataList;
     }
 }
